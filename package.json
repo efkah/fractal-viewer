@@ -1,0 +1,28 @@
+{
+  "name": "fractal-viewer",
+  "version": "1.0.0",
+  "description": "Simple WebApp to create fractal pictures",
+  "main": "index.js",
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "live-server": "^1.2.2",
+    "typescript": "^4.9.3"
+  },
+  "scripts": {
+    "start": "concurrently --kill-others \"npm run watch\" \"npm run server\"",
+    "server": "npx live-server --no-browser --ignore=$(pwd)/src/**/*.ts",
+    "watch": "npx tsc --watch",
+    "build": "npx tsc --build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/efkah/fractal-viewer.git"
+  },
+  "author": "Felix Krause",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/efkah/fractal-viewer/issues"
+  },
+  "homepage": "https://github.com/efkah/fractal-viewer#readme"
+}

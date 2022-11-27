@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fractal Drawer</title>
+    <style>
+      html {
+        font: 1rem 'Arial', sans-serif;
+      }
+      header {
+        position: relative;
+      }
+      header img {
+        position: absolute;
+        top: 0;
+        right: -7em;
+        width: 16em;
+        display: none;
+      }
+      .loading header img {
+        display: block;
+      }
+      main {
+        display: grid;
+        grid-template: auto / auto;
+        grid-gap: 1rem;
+      }
+      .controls {
+        display: grid;
+        grid-template: auto / 5fr 1fr;
+        grid-gap: 1rem;
+      }
+      canvas {
+        display: none;
+      }
+      input {
+        margin: 0.4rem;
+      }
+      label,
+      a {
+        font-size: 11px;
+      }
+      input {
+        width: 56px;
+      }
+      .drawer img {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Fractal Drawer</h1>
+      <img src="cupertino_activity_indicator_small.gif" />
+    </header>
+    <main>
+      <div class="controls">
+        <textarea rows="15" onkeydown="runScriptFromTextArea(event)">
+/* 
+  Here you can set
+  * the size of the resulting img in px
+  * the min and max of the region to be plotted
+  * the density of the grid (steps)
+*/
+document.drawer.setGrid({
+    size: { x: 1600, y: 1600 },
+    min: { im: 0, re: 0 },
+    max: { im: 1, re: 1 },
+    steps: 80
+});
+
+/* 
+  You can currently draw your data-points as 
+  rectangles, circles or predefined images.
+
+  Rect = 1, Image = 2, Circle = 3
+*/
+document.drawer.type = 3;
+
+/* 
+  You can currently draw 
+  * random data-points
+  * julia sets from the mandelbrot set
+*/
+// document.drawer.draw('Random');
+document.drawer.draw('Julia', {im: 0.01, re: 0.285 });
+        </textarea>
+        <button onclick="runScript()">Run Script</button>
+      </div>
+
+      <div class="drawer">
+        <img id="img" src="" />
+      </div>
+    </main>
+    <script type="module">
+      import createDrawer from './dist/app.js';
+
+      document.drawer = createDrawer(document.getElementById('img'));
+    </script>
+    <script>
+      function runScriptFromTextArea(event) {
+        if (
+          event.keyCode === 83 &&
+          (navigator.platform.match('Mac') ? event.metaKey : event.ctrlKey)
+        ) {
+          event.preventDefault();
+          runScript();
+        }
+      }
+      function runScript() {
+        document.querySelector('body').classList.add('loading');
+        document.querySelector('textarea').disabled = true;
+        document.querySelector('button').disabled = true;
+        window.setTimeout(() => {
+          try {
+            eval(document.querySelector('.controls textarea').value);
+          } catch (error) {
+            alert(error);
+          } finally {
+            document.querySelector('body').classList.remove('loading');
+            document.querySelector('textarea').disabled = false;
+            document.querySelector('button').disabled = false;
+          }
+        }, 10);
+      }
+    </script>
+  </body>
+</html>
